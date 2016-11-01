@@ -6,7 +6,15 @@
 #include <tinystl/allocator.h>
 #include <tinystl/unordered_map.h>
 
+#include <EASTL/map.h>
+#include <EASTL/hash_map.h>
+#include <EASTL/vector_map.h>
+#include <EASTL/fixed_map.h>
+
+#include <vector>
 #include <unordered_map>
+
+
 
 #include <stdio.h>
 #include <assert.h>
@@ -14,8 +22,12 @@
 int main()
 {
 	const uint32_t numElements   = 4<<10;
-	const uint32_t numIterations = 16;
+	const uint32_t numIterations = 16*16;
 
+	std::vector<int> a;
+	a.reserve(10);
+	a[0] = 1;
+	
 	//
 	{
 		int64_t elapsed = -bx::getHPCounter();
@@ -72,6 +84,36 @@ int main()
 		printf("          STL: %15f\n", double(elapsed) );
 	}
 
+	///
+	{
+		int64_t elapsed = -bx::getHPCounter();
+		
+		for (uint32_t ii = 0; ii < numIterations; ++ii)
+		{
+			typedef eastl::fixed_map<uint64_t, uint16_t, numElements+numElements/2, false> StdUnorderedMap;
+			StdUnorderedMap map;
+			//map.reserve(numElements);
+			for (uint32_t jj = 0; jj < numElements; ++jj)
+			{
+				eastl::pair<StdUnorderedMap::iterator, bool> ok =
+				map.insert(eastl::make_pair(uint64_t(jj), uint16_t(jj) ) );
+				assert(ok.second);
+			}
+			
+			for (uint32_t jj = 0; jj < numElements; ++jj)
+			{
+				bool ok = bx::mapRemove(map, uint64_t(jj) );
+				assert(ok);
+			}
+			
+			assert(map.size() == 0);
+		}
+		
+		elapsed += bx::getHPCounter();
+		printf("          EASTL hash_map: %15f\n", double(elapsed) );
+	}
+	
+	
 	///
 	{
 		int64_t elapsed = -bx::getHPCounter();

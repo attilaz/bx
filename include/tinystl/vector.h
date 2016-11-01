@@ -102,6 +102,10 @@ namespace tinystl {
 
 	private:
 		buffer<T, Alloc> m_buffer;
+		
+#ifdef TINYSTL_VECTOR_CLASS_EXTRA   // Define extra functions in config.h to extend functionality
+		TINYSTL_VECTOR_CLASS_EXTRA
+#endif
 	};
 
 	template<typename T, typename Alloc>

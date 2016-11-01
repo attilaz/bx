@@ -1,5 +1,6 @@
 /*-
  * Copyright 2012 Matthew Endsley
+ *			 2016 Attila Kocsis
  * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without

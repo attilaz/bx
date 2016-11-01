@@ -1,6 +1,7 @@
 /*-
  * Copyright 2012-1015 Matthew Endsley
- * All rights reserved
+ *			 2016 Attila Kocsis
+* All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted providing that the following conditions
@@ -27,6 +28,7 @@
 #ifndef TINYSTL_BUFFER_H
 #define TINYSTL_BUFFER_H
 
+#include "config.h"
 #include "new.h"
 #include "traits.h"
 

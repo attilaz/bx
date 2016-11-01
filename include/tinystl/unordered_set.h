@@ -65,6 +65,10 @@ namespace tinystl {
 
 		size_t m_size;
 		buffer<pointer, Alloc> m_buckets;
+		
+#ifdef TINYSTL_UNORDERED_SET_CLASS_EXTRA   // Define extra functions in config.h to extend functionality
+		TINYSTL_UNORDERED_SET_CLASS_EXTRA
+#endif
 	};
 
 	template<typename Key, typename Alloc>

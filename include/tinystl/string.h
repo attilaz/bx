@@ -28,6 +28,7 @@
 #define TINYSTL_STRING_H
 
 #include <string.h> // strlen
+#include "config.h"
 #include "stddef.h"
 #include "hash.h"
 
@@ -64,6 +65,10 @@ namespace tinystl {
 
 		static const size_t c_nbuffer = 12;
 		char m_buffer[12];
+		
+#ifdef TINYSTL_VECTOR_CLASS_EXTRA   // Define extra functions in config.h to extend functionality
+		TINYSTL_VECTOR_CLASS_EXTRA
+#endif
 	};
 
 	typedef stringT<TINYSTL_ALLOCATOR> string;
