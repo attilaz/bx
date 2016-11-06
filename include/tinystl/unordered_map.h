@@ -221,6 +221,7 @@ namespace tinystl {
 
 	template<typename Key, typename Value, typename Alloc>
 	void unordered_map<Key, Value, Alloc>::erase(const_iterator where) {
+//		TINYSTL_ASSERT(???,  "unordered_map::erase(iterator) called with an iterator not referring to this unordered_map");
 		unordered_hash_node_erase(where.node, hash(where->first), m_buckets.first, (size_t)(m_buckets.last - m_buckets.first) - 1);
 
 		where->~unordered_hash_node<Key, Value>();

@@ -24,8 +24,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_STRING_H
-#define TINYSTL_STRING_H
+#ifndef TINYSTL_ORIGINAL_STRING_H
+#define TINYSTL_ORIGINAL_STRING_H
 
 #include <string.h> // strlen
 #include "stddef.h"
@@ -66,7 +66,7 @@ namespace tinystl_original {
 		char m_buffer[12];
 	};
 
-	typedef stringT<TINYSTL_ALLOCATOR> string;
+	typedef stringT<TINYSTL_ORIGINAL_ALLOCATOR> string;
 
 	template<typename Alloc>
 	inline stringT<Alloc>::stringT()

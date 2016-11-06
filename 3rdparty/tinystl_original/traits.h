@@ -24,17 +24,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_TRAITS_H
-#define TINYSTL_TRAITS_H
+#ifndef TINYSTL_ORIGINAL_TRAITS_H
+#define TINYSTL_ORIGINAL_TRAITS_H
 
 #include "new.h"
 
 #if defined(__GNUC__) && defined(__is_pod)
-#	define TINYSTL_TRY_POD_OPTIMIZATION(t) __is_pod(t)
+#	define TINYSTL_ORIGINAL_TRY_POD_OPTIMIZATION(t) __is_pod(t)
 #elif defined(_MSC_VER)
-#	define TINYSTL_TRY_POD_OPTIMIZATION(t) (!__is_class(t) || __is_pod(t))
+#	define TINYSTL_ORIGINAL_TRY_POD_OPTIMIZATION(t) (!__is_class(t) || __is_pod(t))
 #else
-#	define TINYSTL_TRY_POD_OPTIMIZATION(t) false
+#	define TINYSTL_ORIGINAL_TRY_POD_OPTIMIZATION(t) false
 #endif
 
 namespace tinystl_original {

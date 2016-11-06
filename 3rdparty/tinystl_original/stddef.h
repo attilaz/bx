@@ -24,8 +24,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_STDDEF_H
-#define TINYSTL_STDDEF_H
+#ifndef TINYSTL_ORIGINAL_STDDEF_H
+#define TINYSTL_ORIGINAL_STDDEF_H
 
 #if defined(_WIN64)
 	typedef long long unsigned int size_t;

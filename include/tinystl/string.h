@@ -45,6 +45,9 @@ namespace tinystl {
 
 		stringT<Alloc>& operator=(const stringT<Alloc>& other);
 
+		char& operator[](size_t pos);
+		const char& operator[](size_t pos) const;
+		
 		const char* c_str() const;
 		size_t size() const;
 		bool empty() const;
@@ -98,10 +101,8 @@ namespace tinystl {
 		, m_last(m_buffer)
 		, m_capacity(m_buffer + c_nbuffer)
 	{
-		size_t len = 0;
-		for (const char* it = sz; *it; ++it)
-			++len;
-
+		TINYSTL_ASSERT(sz != nullptr, "stringT(const char*) detected nullptr");
+		size_t len = strlen(sz);
 		reserve(len);
 		append(sz, sz + len);
 	}
@@ -112,6 +113,7 @@ namespace tinystl {
 		, m_last(m_buffer)
 		, m_capacity(m_buffer + c_nbuffer)
 	{
+		TINYSTL_ASSERT(len == 0 || sz != nullptr, "stringT(const char*, size_t) detected nullptr");
 		reserve(len);
 		append(sz, sz + len);
 	}
@@ -128,6 +130,18 @@ namespace tinystl {
 		return *this;
 	}
 
+	template<typename Alloc>
+	inline char& stringT<Alloc>::operator[](size_t idx) {
+		TINYSTL_ASSERT(idx <= size(), "string index out of bounds");
+		return *(m_first + idx);
+	}
+
+	template<typename Alloc>
+	inline const char& stringT<Alloc>::operator[](size_t idx) const {
+		TINYSTL_ASSERT(idx <= size(), "string index out of bounds");
+		return *(m_first + idx);
+	}
+	
 	template<typename Alloc>
 	inline const char* stringT<Alloc>::c_str() const {
 		return m_first;
@@ -147,16 +161,14 @@ namespace tinystl {
 
 	template<typename Alloc>
 	inline void stringT<Alloc>::reserve(size_t capacity) {
-		if (m_first + capacity + 1 <= m_capacity) {
+		if (m_first + capacity + 1 <= m_capacity) {	
 			return;
 		}
 
 		const size_t _size = (size_t)(m_last - m_first);
 
 		pointer newfirst = (pointer)Alloc::static_allocate(capacity + 1);
-		for (pointer it = m_first, newit = newfirst, end = m_last; it != end; ++it, ++newit) {
-			*newit = *it;
-		}
+		memcpy(newfirst, m_first, m_last - m_first + 1);
 
 		if (m_first != m_buffer) {
 			Alloc::static_deallocate(m_first, m_capacity - m_first);
@@ -164,7 +176,7 @@ namespace tinystl {
 
 		m_first = newfirst;
 		m_last = newfirst + _size;
-		m_capacity = m_first + capacity;
+		m_capacity = m_first + capacity + 1;
 	}
 
 	template<typename Alloc>
@@ -182,8 +194,9 @@ namespace tinystl {
 		if (m_first + newsize > m_capacity)
 			reserve((newsize * 3) / 2);
 
-		for (; first != last; ++m_last, ++first)
-			*m_last = *first;
+		const size_t srclen = last-first;
+		memcpy(m_last, first, srclen);
+		m_last += srclen;
 		*m_last = 0;
 	}
 

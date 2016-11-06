@@ -182,11 +182,13 @@ namespace tinystl {
 
 	template<typename T, typename Alloc>
 	inline T& vector<T, Alloc>::operator[](size_t idx) {
+		TINYSTL_ASSERT(idx < size(), "vector[] index out of bounds");
 		return m_buffer.first[idx];
 	}
 
 	template<typename T, typename Alloc>
 	inline const T& vector<T, Alloc>::operator[](size_t idx) const {
+		TINYSTL_ASSERT(idx < size(), "vector[] index out of bounds");
 		return m_buffer.first[idx];
 	}
 
@@ -283,42 +285,52 @@ namespace tinystl {
 
 	template<typename T, typename Alloc>
 	inline void vector<T, Alloc>::insert(iterator where) {
+		TINYSTL_ASSERT(begin() <= where && where <= end(),  "vector::insert(iterator) called with an iterator not referring to this vector");
 		buffer_insert(&m_buffer, where, 1);
 	}
 
 	template<typename T, typename Alloc>
 	inline void vector<T, Alloc>::insert(iterator where, const T& value) {
+		TINYSTL_ASSERT(begin() <= where && where <= end(),  "vector::insert(iterator, value) called with an iterator not referring to this vector");
 		buffer_insert(&m_buffer, where, &value, &value + 1);
 	}
 
 	template<typename T, typename Alloc>
 	inline void vector<T, Alloc>::insert(iterator where, const T* first, const T* last) {
+		TINYSTL_ASSERT(begin() <= where && where <= end(),  "vector::insert(iterator, range) called with an iterator not referring to this vector");
 		buffer_insert(&m_buffer, where, first, last);
 	}
 
 	template<typename T, typename Alloc>
 	inline typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator where) {
+		TINYSTL_ASSERT(begin() <= where && where <= end(),  "vector::erase(iterator) called with an iterator not referring to this vector");
 		return buffer_erase(&m_buffer, where, where + 1);
 	}
 
 	template<typename T, typename Alloc>
 	inline typename vector<T, Alloc>::iterator vector<T, Alloc>::erase(iterator first, iterator last) {
+		TINYSTL_ASSERT(begin() <= first && last <= end(),  "vector::erase(iterator, iterator) called with an iterator not referring to this vector");
+		TINYSTL_ASSERT(first <= last, "vector::erase(first, last) called with invalid range");
 		return buffer_erase(&m_buffer, first, last);
 	}
 
 	template<typename T, typename Alloc>
 	inline typename vector<T, Alloc>::iterator vector<T, Alloc>::erase_unordered(iterator where) {
+		TINYSTL_ASSERT(begin() <= where && where <= end(),  "vector::erase_unordered(iterator) called with an iterator not referring to this vector");
 		return buffer_erase_unordered(&m_buffer, where, where + 1);
 	}
 
 	template<typename T, typename Alloc>
 	inline typename vector<T, Alloc>::iterator vector<T, Alloc>::erase_unordered(iterator first, iterator last) {
+		TINYSTL_ASSERT(begin() <= first && last <= end(),  "vector::erase(iterator, iterator) called with an iterator not referring to this vector");
+		TINYSTL_ASSERT(first <= last, "vector::erase(first, last) called with invalid range");
 		return buffer_erase_unordered(&m_buffer, first, last);
 	}
 
 	template<typename T, typename Alloc>
 	template<typename Param>
 	void vector<T, Alloc>::emplace(iterator where, const Param& param) {
+		TINYSTL_ASSERT(begin() <= where && where <= end(),  "vector::emplace(iterator, value) called with an iterator not referring to this vector");
 		buffer_insert(&m_buffer, where, &param, &param + 1);
 	}
 }

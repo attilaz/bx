@@ -24,12 +24,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_ALLOCATOR_H
-#define TINYSTL_ALLOCATOR_H
+#ifndef TINYSTL_ORIGINAL_ALLOCATOR_H
+#define TINYSTL_ORIGINAL_ALLOCATOR_H
 
 #include "stddef.h"
 
-#ifndef TINYSTL_ALLOCATOR
+#ifndef TINYSTL_ORIGINAL_ALLOCATOR
 
 namespace tinystl_original {
 
@@ -44,7 +44,7 @@ namespace tinystl_original {
 	};
 }
 
-#	define TINYSTL_ALLOCATOR ::tinystl::allocator
+#	define TINYSTL_ORIGINAL_ALLOCATOR ::tinystl_original::allocator
 #endif // TINYSTL_ALLOCATOR
 
 #endif

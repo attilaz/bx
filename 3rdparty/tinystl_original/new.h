@@ -24,8 +24,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_NEW_H
-#define TINYSTL_NEW_H
+#ifndef TINYSTL_ORIGINAL_NEW_H
+#define TINYSTL_ORIGINAL_NEW_H
 
 #include "stddef.h"
 

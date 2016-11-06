@@ -192,6 +192,7 @@ namespace tinystl {
 
 	template<typename Key, typename Alloc>
 	inline void unordered_set<Key, Alloc>::erase(iterator where) {
+		//TINYSTL_ASSERT(???,  "unordered_set::erase(iterator) called with an iterator not referring to this unordered_set");
 		unordered_hash_node_erase(where.node, hash(where.node->first), m_buckets.first, (size_t)(m_buckets.last - m_buckets.first) - 1);
 
 		where.node->~unordered_hash_node<Key, void>();

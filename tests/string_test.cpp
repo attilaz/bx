@@ -8,6 +8,9 @@
 #include <bx/crtimpl.h>
 #include <bx/handlealloc.h>
 
+#include <tinystl/allocator.h>
+#include <tinystl/string.h>
+
 bx::AllocatorI* g_allocator;
 
 TEST_CASE("strnlen", "")
@@ -39,3 +42,32 @@ TEST_CASE("StringView", "")
 	sv.clear();
 	REQUIRE(0 == sv.getLength() );
 }
+
+TEST_CASE("TinystlString", "")
+{
+	tinystl::string s("test");
+	
+	REQUIRE(s[2]=='s');
+	
+	s[2] = 'x';
+	
+	REQUIRE(*(s.c_str() + 2) =='x');
+
+	REQUIRE(0 == strcmp(s.c_str(), "text"));
+
+	const char* largeText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	
+	tinystl::string s2(largeText);
+	REQUIRE(0 == strcmp(s2.c_str(), largeText));
+	
+	tinystl::string s3("this is text");
+	s3.resize(100);
+	REQUIRE(0 == strcmp(s3.c_str(), "this is text"));
+
+	tinystl::string s4("this is text");
+	s4.reserve(100);
+	REQUIRE(0 == strcmp(s4.c_str(), "this is text"));
+	
+	
+}
+

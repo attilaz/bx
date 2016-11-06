@@ -3,30 +3,164 @@
 #include <bx/handlealloc.h>
 #include <bx/maputil.h>
 
+#include <tinystl_original/allocator.h>
+#include <tinystl_original/string.h>
+
+
 #include <tinystl/allocator.h>
 #include <tinystl/unordered_map.h>
+#include <tinystl/string.h>
 
 #include <EASTL/map.h>
 #include <EASTL/hash_map.h>
 #include <EASTL/vector_map.h>
 #include <EASTL/fixed_map.h>
+#include <EASTL/string.h>
 
+#include <string>
 #include <vector>
 #include <unordered_map>
 
 
+//TODO: insert(iterator) is not in std
 
 #include <stdio.h>
 #include <assert.h>
 
+class Benchmark
+{
+public:
+	Benchmark() : startTime(0)
+	{
+	}
+	
+	void start()
+	{
+		if ( 0 == startTime )
+		{
+			startTime = bx::getHPCounter();
+		}
+	}
+	void stop()
+	{
+		if ( 0 != startTime )
+		{
+			fullTime += bx::getHPCounter() - startTime;
+			startTime = 0;
+		}
+	}
+	
+	void finishAndLog(const char* title)
+	{
+		printf("%50s: %15.0f\n", title, (double)fullTime);
+		fullTime = 0;
+	}
+	
+
+protected:
+	int64_t fullTime;
+	int64_t startTime;
+};
+
+
+template <typename Container>
+void string_construct_destruct_bench(Benchmark& b)
+{
+	b.start();
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+		}
+	}
+	
+	b.stop();
+}
+
+template <typename Container>
+void string_resize_bench(Benchmark& b)
+{
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+			b.start();	//test construct/destruct
+			a.resize(1000);
+			b.stop();
+		}
+	}
+}
+
+template <typename Container>
+void string_reserve_bench(Benchmark& b)
+{
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+			b.start();
+			a.reserve(100);
+			b.stop();
+		}
+	}
+}
+
+
+
 int main()
 {
 	const uint32_t numElements   = 4<<10;
-	const uint32_t numIterations = 16*16;
+	const uint32_t numIterations = 4*16;
+	
+	Benchmark b;
 
-	std::vector<int> a;
-	a.reserve(10);
-	a[0] = 1;
+	for(int i=0; i < 3;++i)
+	{
+		string_construct_destruct_bench<tinystl_original::string>(b);
+		b.finishAndLog("tinystl_original::string construct/destruct");
+		
+		string_construct_destruct_bench<tinystl::string>(b);
+		b.finishAndLog("tinystl::string construct/destruct");
+		
+		string_construct_destruct_bench<std::string>(b);
+		b.finishAndLog("std::string construct/destruct");
+		
+		string_construct_destruct_bench<eastl::string>(b);
+		b.finishAndLog("eastl::string construct/destruct");
+	}
+
+	for(int i=0; i < 3;++i)
+	{
+		string_resize_bench<tinystl_original::string>(b);
+		b.finishAndLog("tinystl_original::string resize");
+		
+		string_resize_bench<tinystl::string>(b);
+		b.finishAndLog("tinystl::string resize");
+		
+		string_resize_bench<std::string>(b);
+		b.finishAndLog("std::string resize");
+		
+		string_resize_bench<eastl::string>(b);
+		b.finishAndLog("eastl::string resize");
+		
+	}
+
+	
+	for(int i=0; i < 3;++i)
+	{
+		string_reserve_bench<tinystl_original::string>(b);
+		b.finishAndLog("tinystl_original::string reserve");
+		
+		string_reserve_bench<tinystl::string>(b);
+		b.finishAndLog("tinystl::string reserve");
+		
+		string_reserve_bench<std::string>(b);
+		b.finishAndLog("std::string reserve");
+		
+		string_reserve_bench<eastl::string>(b);
+		b.finishAndLog("eastl::string reserve");
+		
+	}
 	
 	//
 	{
@@ -53,7 +187,7 @@ int main()
 		}
 
 		elapsed += bx::getHPCounter();
-		printf("      TinyStl: %15f\n", double(elapsed) );
+		printf("       TinyStl: %15.0f\n", double(elapsed) );
 	}
 
 	///
@@ -81,7 +215,7 @@ int main()
 		}
 
 		elapsed += bx::getHPCounter();
-		printf("          STL: %15f\n", double(elapsed) );
+		printf("           STL: %15.0f\n", double(elapsed) );
 	}
 
 	///
@@ -110,7 +244,7 @@ int main()
 		}
 		
 		elapsed += bx::getHPCounter();
-		printf("          EASTL hash_map: %15f\n", double(elapsed) );
+		printf("EASTL hash_map: %15.0f\n", double(elapsed) );
 	}
 	
 	
@@ -138,7 +272,7 @@ int main()
 		}
 
 		elapsed += bx::getHPCounter();
-		printf("HandleHashMap: %15f\n", double(elapsed) );
+		printf(" HandleHashMap: %15.0f\n", double(elapsed) );
 	}
 
 	return EXIT_SUCCESS;
