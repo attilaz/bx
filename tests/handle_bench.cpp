@@ -1,5 +1,4 @@
 #include <bx/bx.h>
-#include <bx/timer.h>
 #include <bx/handlealloc.h>
 #include <bx/maputil.h>
 
@@ -22,45 +21,12 @@
 #include <unordered_map>
 
 
+#include "dbg.h"
 //TODO: insert(iterator) is not in std
 
 #include <stdio.h>
 #include <assert.h>
 
-class Benchmark
-{
-public:
-	Benchmark() : startTime(0)
-	{
-	}
-	
-	void start()
-	{
-		if ( 0 == startTime )
-		{
-			startTime = bx::getHPCounter();
-		}
-	}
-	void stop()
-	{
-		if ( 0 != startTime )
-		{
-			fullTime += bx::getHPCounter() - startTime;
-			startTime = 0;
-		}
-	}
-	
-	void finishAndLog(const char* title)
-	{
-		printf("%50s: %15.0f\n", title, (double)fullTime);
-		fullTime = 0;
-	}
-	
-
-protected:
-	int64_t fullTime;
-	int64_t startTime;
-};
 
 
 template <typename Container>
@@ -105,6 +71,104 @@ void string_reserve_bench(Benchmark& b)
 	}
 }
 
+template <typename Container>
+void string_set_value_string(Benchmark& b)
+{
+	{
+		Container s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+		
+		for(int i=0;i<100000;++i)
+		{
+			Container a;
+			b.start();
+			a = s;
+			b.stop();
+		}
+	}
+}
+
+template <typename Container>
+void string_set_value_constchar(Benchmark& b)
+{
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a;
+			b.start();
+			a = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+			b.stop();
+		}
+	}
+}
+
+template <typename Container>
+void string_compare_string(Benchmark& b)
+{
+	{
+		Container s0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+		Container s1 = "Lorem ipsum ";
+		Container s2 = "dolor sit amet, consectetur adipiscing elit.";
+		
+		b.start();
+		for(int i=0;i<100000;++i)
+		{
+			b.use(s0 == s1);
+			b.use(s1 == s2);
+			b.use(s2 == s2);
+			
+		}
+		b.stop();
+	}
+}
+
+template <typename Container>
+void string_compare_const_char(Benchmark& b)
+{
+	{
+		const char* cs0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+		const char* cs1 = "Lorem ipsum ";
+		const char* cs2 = "dolor sit amet, consectetur adipiscing elit.";
+		
+		Container s0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+		Container s1 = "Lorem ipsum ";
+		Container s2 = "dolor sit amet, consectetur adipiscing elit.";
+		
+		b.start();
+		for(int i=0;i<100000;++i)
+		{
+			b.use(s0 == cs1);
+			b.use(s1 == cs2);
+			b.use(s2 == cs2);
+			b.use(s2 == cs0);
+		}
+		b.stop();
+	}
+}
+
+
+
+
+#define TEST(function, name)\
+{\
+function<tinystl::string>(b);	\
+b.finishAndLog("tinystl" name);	\
+function<tinystl_original::string>(b);	\
+b.finishAndLog("tinystl_original" name);\
+function<std::string>(b);	\
+b.finishAndLog("std" name);	\
+function<eastl::string>(b);	\
+b.finishAndLog("eastl" name);\
+}
+
+#define TEST_NO_TINYSTLORIG(function, name)\
+{\
+function<tinystl::string>(b);	\
+b.finishAndLog("tinystl" name);	\
+function<std::string>(b);	\
+b.finishAndLog("std" name);	\
+function<eastl::string>(b);	\
+b.finishAndLog("eastl" name);\
+}
 
 
 int main()
@@ -114,53 +178,27 @@ int main()
 	
 	Benchmark b;
 
+#if 0
 	for(int i=0; i < 3;++i)
-	{
-		string_construct_destruct_bench<tinystl_original::string>(b);
-		b.finishAndLog("tinystl_original::string construct/destruct");
-		
-		string_construct_destruct_bench<tinystl::string>(b);
-		b.finishAndLog("tinystl::string construct/destruct");
-		
-		string_construct_destruct_bench<std::string>(b);
-		b.finishAndLog("std::string construct/destruct");
-		
-		string_construct_destruct_bench<eastl::string>(b);
-		b.finishAndLog("eastl::string construct/destruct");
-	}
+		TEST(string_construct_destruct_bench, "::string construct/destruct");
 
 	for(int i=0; i < 3;++i)
-	{
-		string_resize_bench<tinystl_original::string>(b);
-		b.finishAndLog("tinystl_original::string resize");
-		
-		string_resize_bench<tinystl::string>(b);
-		b.finishAndLog("tinystl::string resize");
-		
-		string_resize_bench<std::string>(b);
-		b.finishAndLog("std::string resize");
-		
-		string_resize_bench<eastl::string>(b);
-		b.finishAndLog("eastl::string resize");
-		
-	}
-
+		TEST(string_resize_bench, "::string resize");
 	
 	for(int i=0; i < 3;++i)
-	{
-		string_reserve_bench<tinystl_original::string>(b);
-		b.finishAndLog("tinystl_original::string reserve");
-		
-		string_reserve_bench<tinystl::string>(b);
-		b.finishAndLog("tinystl::string reserve");
-		
-		string_reserve_bench<std::string>(b);
-		b.finishAndLog("std::string reserve");
-		
-		string_reserve_bench<eastl::string>(b);
-		b.finishAndLog("eastl::string reserve");
-		
-	}
+		TEST(string_reserve_bench, "::string reserve");
+
+	for(int i=0; i < 3;++i)
+		TEST(string_set_value_constchar, "::string set value const char*");
+	for(int i=0; i < 3;++i)
+		TEST(string_set_value_string, "::string set value string");
+#endif
+
+	for(int i=0; i < 3;++i)
+		TEST(string_compare_string, "::string compare string");
+
+	for(int i=0; i < 3;++i)
+		TEST_NO_TINYSTLORIG(string_compare_const_char, "::string compare const char*");
 	
 	//
 	{

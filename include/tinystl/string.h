@@ -44,6 +44,7 @@ namespace tinystl {
 		~stringT();
 
 		stringT<Alloc>& operator=(const stringT<Alloc>& other);
+		stringT<Alloc>& operator=(const char* other);
 
 		char& operator[](size_t pos);
 		const char& operator[](size_t pos) const;
@@ -126,10 +127,21 @@ namespace tinystl {
 
 	template<typename Alloc>
 	inline stringT<Alloc>& stringT<Alloc>::operator=(const stringT<Alloc>& other) {
-		stringT<Alloc>(other).swap(*this);
+		if ( this != &other)
+		{
+			m_last = m_first;
+			append(other.m_first, other.m_last);
+		}
 		return *this;
 	}
 
+	template<typename Alloc>
+	inline stringT<Alloc>& stringT<Alloc>::operator=(const char* other) {
+		m_last = m_first;
+		append(other);
+		return *this;
+	}
+	
 	template<typename Alloc>
 	inline char& stringT<Alloc>::operator[](size_t idx) {
 		TINYSTL_ASSERT(idx <= size(), "string index out of bounds");
@@ -240,21 +252,21 @@ namespace tinystl {
 
 	template<typename Alloc>
 	inline bool operator==(const stringT<Alloc>& lhs, const stringT<Alloc>& rhs) {
-		typedef const char* pointer;
-
-		const size_t lsize = lhs.size(), rsize = rhs.size();
-		if (lsize != rsize)
-			return false;
-
-		pointer lit = lhs.c_str(), rit = rhs.c_str();
-		pointer lend = lit + lsize;
-		while (lit != lend)
-			if (*lit++ != *rit++)
-				return false;
-
-		return true;
+		return (lhs.size() == rhs.size()) && (0 == memcmp(lhs.c_str(), rhs.c_str(), lhs.size()));
 	}
 
+	template<typename Alloc>
+	inline bool operator==(const stringT<Alloc>& lhs, const char* rhs) {
+		size_t rhs_size = strlen(rhs);
+		return (lhs.size() == rhs_size) && (0 == memcmp(lhs.c_str(), rhs, lhs.size()));
+	}
+
+	template<typename Alloc>
+	inline bool operator==(const char* lhs, const stringT<Alloc>& rhs) {
+		size_t lhs_size = strlen(lhs);
+		return (lhs_size == rhs.size()) && (0 == memcmp(lhs, rhs.c_str(), lhs_size));
+	}
+	
 	template<typename Alloc>
 	static inline size_t hash(const stringT<Alloc>& value) {
 		return hash_string(value.c_str(), value.size());
