@@ -20,6 +20,7 @@
 #include <vector>
 #include <unordered_map>
 
+#include <functional>
 
 #include "dbg.h"
 //TODO: insert(iterator) is not in std
@@ -27,7 +28,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-
+#define countof(N) (sizeof(N)/sizeof(N[0]))
 
 template <typename Container>
 void string_construct_destruct_bench(Benchmark& b)
@@ -145,60 +146,81 @@ void string_compare_const_char(Benchmark& b)
 	}
 }
 
-
-
-
-#define TEST(function, name)\
-{\
-function<tinystl::string>(b);	\
-b.finishAndLog("tinystl" name);	\
-function<tinystl_original::string>(b);	\
-b.finishAndLog("tinystl_original" name);\
-function<std::string>(b);	\
-b.finishAndLog("std" name);	\
-function<eastl::string>(b);	\
-b.finishAndLog("eastl" name);\
+void benchmark(std::function<void(Benchmark&)> func)
+{
+	float times[10];
+	for(int i=0;i<countof(times);++i)
+	{
+		Benchmark b;
+		func(b);
+		times[i] = b.getFullTime();
+	}
+	//compute median with disregarding outliers
+	std::sort(times, times+countof(times));
+	
+	float median = times[countof(times)/2];
+	
+	int countNotOutlier = 0;
+	float sum = 0.0;
+	for(int i=0;i<countof(times);++i)
+	{
+		if ( fabsf(median-times[i]) < median * 0.1f )
+		{
+			++countNotOutlier;
+			sum += times[i];
+		}
+	}
+	
+	printf("%15.0f", (double)sum / countNotOutlier);
 }
 
-#define TEST_NO_TINYSTLORIG(function, name)\
+#define TEST(function, title)\
 {\
-function<tinystl::string>(b);	\
-b.finishAndLog("tinystl" name);	\
-function<std::string>(b);	\
-b.finishAndLog("std" name);	\
-function<eastl::string>(b);	\
-b.finishAndLog("eastl" name);\
+printf("%30s", title);\
+benchmark(function<tinystl::string>);	\
+benchmark(function<tinystl_original::string>);	\
+benchmark(function<std::string>);	\
+benchmark(function<eastl::string>);	\
+printf("\n");\
 }
 
+#define TEST_NO_TINYSTLORIG(function, title)\
+{\
+printf("%30s", title);\
+benchmark(function<tinystl::string>);	\
+printf("%15.0f", 0.0f); \
+benchmark(function<std::string>);	\
+benchmark(function<eastl::string>);	\
+printf("\n");\
+}
+
+void string_benchmarks()
+{
+	Benchmark b;
+	
+	printf("%30s%15s%15s%15s%15s\n", "feature", "TinySTL", "TinySTLO", "std", "EASTL");
+	
+	TEST(string_construct_destruct_bench, "::string construct/destruct");
+	
+	TEST(string_resize_bench, "::string resize");
+	
+	TEST(string_reserve_bench, "::string reserve");
+	
+	TEST(string_set_value_constchar, "::string set value const char*");
+	
+	TEST(string_set_value_string, "::string set value string");
+	
+	TEST(string_compare_string, "::string compare string");
+	
+	TEST_NO_TINYSTLORIG(string_compare_const_char, "::string compare const char*");
+}
 
 int main()
 {
 	const uint32_t numElements   = 4<<10;
 	const uint32_t numIterations = 4*16;
 	
-	Benchmark b;
-
-#if 0
-	for(int i=0; i < 3;++i)
-		TEST(string_construct_destruct_bench, "::string construct/destruct");
-
-	for(int i=0; i < 3;++i)
-		TEST(string_resize_bench, "::string resize");
-	
-	for(int i=0; i < 3;++i)
-		TEST(string_reserve_bench, "::string reserve");
-
-	for(int i=0; i < 3;++i)
-		TEST(string_set_value_constchar, "::string set value const char*");
-	for(int i=0; i < 3;++i)
-		TEST(string_set_value_string, "::string set value string");
-#endif
-
-	for(int i=0; i < 3;++i)
-		TEST(string_compare_string, "::string compare string");
-
-	for(int i=0; i < 3;++i)
-		TEST_NO_TINYSTLORIG(string_compare_const_char, "::string compare const char*");
+	string_benchmarks();
 	
 	//
 	{

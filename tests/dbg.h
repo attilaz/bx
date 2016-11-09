@@ -23,7 +23,7 @@ extern void dbgPrintfData(const void* _data, uint32_t _size, const char* _format
 class Benchmark
 {
 public:
-	Benchmark() : startTime(0)
+	Benchmark() : startTime(0), fullTime(0)
 	{
 	}
 	
@@ -43,10 +43,9 @@ public:
 		}
 	}
 	
-	void finishAndLog(const char* title)
+	float getFullTime()
 	{
-		printf("%50s: %15.0f\n", title, (double)fullTime);
-		fullTime = 0;
+		return fullTime;
 	}
 	
 	void use(...);
