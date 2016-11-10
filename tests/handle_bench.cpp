@@ -31,121 +31,6 @@
 
 #define countof(N) (sizeof(N)/sizeof(N[0]))
 
-template <typename Container>
-void string_construct_destruct_bench(Benchmark& b)
-{
-	b.start();
-	{
-		for(int i=0;i<100000;++i)
-		{
-			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-		}
-	}
-	
-	b.stop();
-}
-
-template <typename Container>
-void string_resize_bench(Benchmark& b)
-{
-	{
-		for(int i=0;i<100000;++i)
-		{
-			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-			b.start();	//test construct/destruct
-			a.resize(1000);
-			b.stop();
-		}
-	}
-}
-
-template <typename Container>
-void string_reserve_bench(Benchmark& b)
-{
-	{
-		for(int i=0;i<100000;++i)
-		{
-			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-			b.start();
-			a.reserve(100);
-			b.stop();
-		}
-	}
-}
-
-template <typename Container>
-void string_set_value_string(Benchmark& b)
-{
-	{
-		Container s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-		
-		for(int i=0;i<100000;++i)
-		{
-			Container a;
-			b.start();
-			a = s;
-			b.stop();
-		}
-	}
-}
-
-template <typename Container>
-void string_set_value_constchar(Benchmark& b)
-{
-	{
-		for(int i=0;i<100000;++i)
-		{
-			Container a;
-			b.start();
-			a = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-			b.stop();
-		}
-	}
-}
-
-template <typename Container>
-void string_compare_string(Benchmark& b)
-{
-	{
-		Container s0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-		Container s1 = "Lorem ipsum ";
-		Container s2 = "dolor sit amet, consectetur adipiscing elit.";
-		
-		b.start();
-		for(int i=0;i<100000;++i)
-		{
-			b.use(s0 == s1);
-			b.use(s1 == s2);
-			b.use(s2 == s2);
-			
-		}
-		b.stop();
-	}
-}
-
-template <typename Container>
-void string_compare_const_char(Benchmark& b)
-{
-	{
-		const char* cs0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-		const char* cs1 = "Lorem ipsum ";
-		const char* cs2 = "dolor sit amet, consectetur adipiscing elit.";
-		
-		Container s0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
-		Container s1 = "Lorem ipsum ";
-		Container s2 = "dolor sit amet, consectetur adipiscing elit.";
-		
-		b.start();
-		for(int i=0;i<100000;++i)
-		{
-			b.use(s0 == cs1);
-			b.use(s1 == cs2);
-			b.use(s2 == cs2);
-			b.use(s2 == cs0);
-		}
-		b.stop();
-	}
-}
 
 void benchmark(std::function<void(Benchmark&)> func)
 {
@@ -175,45 +60,186 @@ void benchmark(std::function<void(Benchmark&)> func)
 	printf("%15.0f", (double)sum / countNotOutlier);
 }
 
-#define TEST(function, title)\
+
+#define BENCHMARK(function, title)\
+template <typename Container> void function##_call(Benchmark& b); \
+void function() \
 {\
 printf("%30s", title);\
-benchmark(function<tinystl::string>);	\
-benchmark(function<tinystl_original::string>);	\
-benchmark(function<std::string>);	\
-benchmark(function<eastl::string>);	\
+benchmark(function##_call<tinystl::string>);	\
+benchmark(function##_call<tinystl_original::string>);	\
+benchmark(function##_call<std::string>);	\
+benchmark(function##_call<eastl::string>);	\
 printf("\n");\
+}\
+template <typename Container> void function##_call(Benchmark& b)
+
+//stringT(const stringT<Alloc>& other);
+BENCHMARK(string_construct_string_destruct_bench, "construct(string&)/destruct")
+{
+	Container c("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+	b.start();
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a(c);
+		}
+	}
+	b.stop();
 }
 
-#define TEST_NO_TINYSTLORIG(function, title)\
-{\
-printf("%30s", title);\
-benchmark(function<tinystl::string>);	\
-printf("%15.0f", 0.0f); \
-benchmark(function<std::string>);	\
-benchmark(function<eastl::string>);	\
-printf("\n");\
+//stringT(const char* sz, size_t len);
+BENCHMARK(string_construct_char_len_destruct_bench, "construct(char*,int)/destruct")
+{
+	const char* c = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	size_t len = strlen(c);
+	b.start();
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a(c,len);
+		}
+	}
+	b.stop();
+}
+
+//stringT(const char* sz);
+BENCHMARK(string_construct_char_destruct_bench, "construct(char*)/destruct")
+{
+	b.start();
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+		}
+	}
+	
+	b.stop();
+}
+
+// stringT<Alloc>& operator=(const stringT<Alloc>& other);
+BENCHMARK(string_set_value_string, "set value string&")
+{
+	Container s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	
+	for(int i=0;i<100000;++i)
+	{
+		Container a;
+		b.start();
+		a = s;
+		b.stop();
+	}
+}
+
+// stringT<Alloc>& operator=(const char* other);
+BENCHMARK(string_set_value_constchar, "set value const char*")
+{
+	for(int i=0;i<100000;++i)
+	{
+		Container a;
+		b.start();
+		a = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+		b.stop();
+	}
+}
+
+//void resize(size_t _size);
+BENCHMARK(string_resize_bench, "resize")
+{
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+			b.start();	//test construct/destruct
+			a.resize(1000);
+			b.stop();
+		}
+	}
+}
+
+//void reserve(size_t _size);
+BENCHMARK(string_reserve_bench, "reserve")
+{
+	{
+		for(int i=0;i<100000;++i)
+		{
+			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+			b.start();
+			a.reserve(100);
+			b.stop();
+		}
+	}
+}
+
+//char& operator[](size_t pos);
+//const char& operator[](size_t pos) const;
+
+//const char* c_str() const;
+//size_t size() const;
+//bool empty() const;
+
+//void append(const char* first, const char* last);
+//void append(const char* str);
+
+//void swap(stringT<Alloc>& other);
+
+//inline bool operator==(const stringT<Alloc>& lhs, const stringT<Alloc>& rhs)
+BENCHMARK(string_compare_string, "compare string")
+{
+	Container s0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	Container s1 = "Lorem ipsum ";
+	Container s2 = "dolor sit amet, consectetur adipiscing elit.";
+	
+	b.start();
+	for(int i=0;i<100000;++i)
+	{
+		b.use(s0 == s1);
+		b.use(s1 == s2);
+		b.use(s2 == s2);
+		
+	}
+	b.stop();
+}
+
+//inline bool operator==(const stringT<Alloc>& lhs, const char* rhs) {
+BENCHMARK(string_compare_const_char, "compare const char*")
+{
+	const char* cs0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	const char* cs1 = "Lorem ipsum ";
+	const char* cs2 = "dolor sit amet, consectetur adipiscing elit.";
+	
+	Container s0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	Container s1 = "Lorem ipsum ";
+	Container s2 = "dolor sit amet, consectetur adipiscing elit.";
+	
+	b.start();
+	for(int i=0;i<100000;++i)
+	{
+		b.use(s0 == cs1);
+		b.use(s1 == cs2);
+		b.use(s2 == cs2);
+		b.use(s2 == cs0);
+	}
+	b.stop();
 }
 
 void string_benchmarks()
 {
 	Benchmark b;
 	
-	printf("%30s%15s%15s%15s%15s\n", "feature", "TinySTL", "TinySTLO", "std", "EASTL");
+	printf("%30s%15s%15s%15s%15s\n", "string feature", "TinySTL", "TinySTLO", "std", "EASTL");
+	string_construct_string_destruct_bench();
+	string_construct_char_destruct_bench();
+	string_construct_char_len_destruct_bench();
+	string_resize_bench();
 	
-	TEST(string_construct_destruct_bench, "::string construct/destruct");
+	string_reserve_bench();
+	string_set_value_constchar();
 	
-	TEST(string_resize_bench, "::string resize");
+	string_set_value_string();
 	
-	TEST(string_reserve_bench, "::string reserve");
-	
-	TEST(string_set_value_constchar, "::string set value const char*");
-	
-	TEST(string_set_value_string, "::string set value string");
-	
-	TEST(string_compare_string, "::string compare string");
-	
-	TEST(string_compare_const_char, "::string compare const char*");
+	string_compare_string();
+	string_compare_const_char();
 }
 
 int main()
@@ -223,6 +249,7 @@ int main()
 	
 	string_benchmarks();
 	
+	printf("\n\n");
 	//
 	{
 		int64_t elapsed = -bx::getHPCounter();
