@@ -1,5 +1,5 @@
 /*-
- * Copyright 2012 Matthew Endsley
+ * Copyright 2012-1015 Matthew Endsley
  * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,18 +24,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_ORIGINAL_HASH_BASE_H
-#define TINYSTL_ORIGINAL_HASH_BASE_H
+#ifndef TINYSTL_HASH_BASE_H
+#define TINYSTL_HASH_BASE_H
 
-#include "stddef.h"
+#include <TINYSTL_ORIGINAL/stddef.h>
 
-namespace tinystl_original {
+namespace tinystl {
 
 	template<typename Key, typename Value>
 	struct pair {
-		typedef Key first_type;
-		typedef Value second_type;
-
 		pair();
 		pair(const Key& key, const Value& value);
 

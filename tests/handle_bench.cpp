@@ -2,9 +2,10 @@
 #include <bx/handlealloc.h>
 #include <bx/maputil.h>
 
-#include <tinystl_original/allocator.h>
-#include <tinystl_original/string.h>
-
+#define tinystl tinystl_original
+#include <TINYSTL_ORIGINAL/allocator.h>
+#include <TINYSTL_ORIGINAL/string.h>
+#undef tinystl
 
 #include <tinystl/allocator.h>
 #include <tinystl/unordered_map.h>
@@ -212,7 +213,7 @@ void string_benchmarks()
 	
 	TEST(string_compare_string, "::string compare string");
 	
-	TEST_NO_TINYSTLORIG(string_compare_const_char, "::string compare const char*");
+	TEST(string_compare_const_char, "::string compare const char*");
 }
 
 int main()

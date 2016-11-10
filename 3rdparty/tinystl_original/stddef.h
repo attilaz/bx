@@ -1,5 +1,5 @@
 /*-
- * Copyright 2012 Matthew Endsley
+ * Copyright 2012-1015 Matthew Endsley
  * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_ORIGINAL_STDDEF_H
-#define TINYSTL_ORIGINAL_STDDEF_H
+#ifndef TINYSTL_STDDEF_H
+#define TINYSTL_STDDEF_H
 
 #if defined(_WIN64)
 	typedef long long unsigned int size_t;

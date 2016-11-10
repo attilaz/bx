@@ -1,5 +1,5 @@
 /*-
- * Copyright 2012 Matthew Endsley
+ * Copyright 2012-1015 Matthew Endsley
  * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,14 +24,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_ORIGINAL_ALLOCATOR_H
-#define TINYSTL_ORIGINAL_ALLOCATOR_H
+#ifndef TINYSTL_ALLOCATOR_H
+#define TINYSTL_ALLOCATOR_H
 
-#include "stddef.h"
+#include <TINYSTL_ORIGINAL/stddef.h>
 
-#ifndef TINYSTL_ORIGINAL_ALLOCATOR
+#ifndef TINYSTLO_ALLOCATOR
 
-namespace tinystl_original {
+namespace tinystl {
 
 	struct allocator {
 		static void* static_allocate(size_t bytes) {
@@ -44,7 +44,7 @@ namespace tinystl_original {
 	};
 }
 
-#	define TINYSTL_ORIGINAL_ALLOCATOR ::tinystl_original::allocator
-#endif // TINYSTL_ALLOCATOR
+#	define TINYSTLO_ALLOCATOR ::tinystl::allocator
+#endif
 
 #endif

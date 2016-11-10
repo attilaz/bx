@@ -24,8 +24,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_STRING_H
-#define TINYSTL_STRING_H
+#ifndef TINYSTL_STRING_H_HEADER_GUARD
+#define TINYSTL_STRING_H_HEADER_GUARD
 
 #include <string.h> // strlen
 #include "config.h"

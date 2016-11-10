@@ -1,5 +1,5 @@
 /*-
- * Copyright 2012 Matthew Endsley
+ * Copyright 2012-1015 Matthew Endsley
  * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,20 +24,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_ORIGINAL_TRAITS_H
-#define TINYSTL_ORIGINAL_TRAITS_H
+#ifndef TINYSTL_TRAITS_H
+#define TINYSTL_TRAITS_H
 
-#include "new.h"
+#include <TINYSTL_ORIGINAL/new.h>
 
-#if defined(__GNUC__) && defined(__is_pod)
-#	define TINYSTL_ORIGINAL_TRY_POD_OPTIMIZATION(t) __is_pod(t)
+#if defined(__GNUC__)
+#	define TINYSTL_TRY_POD_OPTIMIZATION(t) __is_pod(t)
 #elif defined(_MSC_VER)
-#	define TINYSTL_ORIGINAL_TRY_POD_OPTIMIZATION(t) (!__is_class(t) || __is_pod(t))
+#	define TINYSTL_TRY_POD_OPTIMIZATION(t) (!__is_class(t) || __is_pod(t))
 #else
-#	define TINYSTL_ORIGINAL_TRY_POD_OPTIMIZATION(t) false
+#	define TINYSTL_TRY_POD_OPTIMIZATION(t) false
 #endif
 
-namespace tinystl_original {
+namespace tinystl {
 	template<typename T, bool pod = TINYSTL_TRY_POD_OPTIMIZATION(T)> struct pod_traits {};
 
 	template<typename T, T t> struct swap_holder;

@@ -3,8 +3,8 @@
  * License: https://github.com/attilaz/tinystl#license-bsd-2-clause
  */
 
-#ifndef TINYSTL_CONFIG_H
-#define TINYSTL_CONFIG_H
+#ifndef TINYSTL_CONFIG_H_HEADER_GUARD
+#define TINYSTL_CONFIG_H_HEADER_GUARD
 
 #ifndef TINYSTL_ASSERT
 #include <assert.h>

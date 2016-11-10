@@ -25,8 +25,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_BUFFER_H
-#define TINYSTL_BUFFER_H
+#ifndef TINYSTL_BUFFER_H_HEADER_GUARD
+#define TINYSTL_BUFFER_H_HEADER_GUARD
 
 #include "config.h"
 #include "new.h"

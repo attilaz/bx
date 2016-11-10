@@ -1,5 +1,5 @@
 /*-
- * Copyright 2012 Matthew Endsley
+ * Copyright 2012-1015 Matthew Endsley
  * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,16 +24,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_ORIGINAL_UNORDERED_MAP_H
-#define TINYSTL_ORIGINAL_UNORDERED_MAP_H
+#ifndef TINYSTL_UNORDERED_MAP_H
+#define TINYSTL_UNORDERED_MAP_H
 
-#include "buffer.h"
-#include "hash.h"
-#include "hash_base.h"
+#include <TINYSTL_ORIGINAL/allocator.h>
+#include <TINYSTL_ORIGINAL/buffer.h>
+#include <TINYSTL_ORIGINAL/hash.h>
+#include <TINYSTL_ORIGINAL/hash_base.h>
 
-namespace tinystl_original {
+namespace tinystl {
 
-	template<typename Key, typename Value, typename Alloc = TINYSTL_ALLOCATOR>
+	template<typename Key, typename Value, typename Alloc = TINYSTLO_ALLOCATOR>
 	class unordered_map {
 	public:
 		unordered_map();
@@ -72,7 +73,7 @@ namespace tinystl_original {
 		typedef unordered_hash_node<Key, Value>* pointer;
 
 		size_t m_size;
-		buffer<pointer, Alloc> m_buckets;
+		tinystl::buffer<pointer, Alloc> m_buckets;
 	};
 
 	template<typename Key, typename Value, typename Alloc>

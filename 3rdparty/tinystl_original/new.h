@@ -1,5 +1,5 @@
 /*-
- * Copyright 2012 Matthew Endsley
+ * Copyright 2012-1015 Matthew Endsley
  * All rights reserved
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,12 +24,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_ORIGINAL_NEW_H
-#define TINYSTL_ORIGINAL_NEW_H
+#ifndef TINYSTL_NEW_H
+#define TINYSTL_NEW_H
 
-#include "stddef.h"
+#include <TINYSTL_ORIGINAL/stddef.h>
 
-namespace tinystl_original {
+namespace tinystl {
 
 	struct placeholder {};
 }

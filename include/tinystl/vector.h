@@ -24,8 +24,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef TINYSTL_VECTOR_H
-#define TINYSTL_VECTOR_H
+#ifndef TINYSTL_VECTOR_H_HEADER_GUARD
+#define TINYSTL_VECTOR_H_HEADER_GUARD
 
 #include "buffer.h"
 #include "new.h"
