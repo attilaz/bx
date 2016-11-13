@@ -74,6 +74,21 @@ printf("\n");\
 }\
 template <typename Container> void function##_call(Benchmark& b)
 
+
+#define BENCHMARK_NO_TINYSTL(function, title)\
+template <typename Container> void function##_call(Benchmark& b); \
+void function() \
+{\
+printf("%30s", title);\
+benchmark(function##_call<tinystl::string>);	\
+printf("%15.0f", 0.0f);\
+benchmark(function##_call<std::string>);	\
+benchmark(function##_call<eastl::string>);	\
+printf("\n");\
+}\
+template <typename Container> void function##_call(Benchmark& b)
+
+
 //stringT(const stringT<Alloc>& other);
 BENCHMARK(string_construct_string_destruct_bench, "construct(string&)/destruct")
 {
@@ -146,42 +161,124 @@ BENCHMARK(string_set_value_constchar, "set value const char*")
 //void resize(size_t _size);
 BENCHMARK(string_resize_bench, "resize")
 {
+	for(int i=0;i<100000;++i)
 	{
-		for(int i=0;i<100000;++i)
-		{
-			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-			b.start();	//test construct/destruct
-			a.resize(1000);
-			b.stop();
-		}
+		Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+		b.start();	//test construct/destruct
+		a.resize(1000);
+		b.stop();
 	}
 }
 
 //void reserve(size_t _size);
 BENCHMARK(string_reserve_bench, "reserve")
 {
+	for(int i=0;i<100000;++i)
 	{
-		for(int i=0;i<100000;++i)
-		{
-			Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
-			b.start();
-			a.reserve(100);
-			b.stop();
-		}
+		Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+		b.start();
+		a.reserve(100);
+		b.stop();
 	}
 }
 
 //char& operator[](size_t pos);
-//const char& operator[](size_t pos) const;
+BENCHMARK_NO_TINYSTL(string_bracket_get_bench, "[] get")
+{
+	Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+	size_t asize = a.size();
+	char accum;
+	b.start();
+	for(int i=0;i<100000;++i)
+	{
+		for(int j=0;j<asize;++j)
+			accum += a[j];
+	}
+	b.use(accum);
+	b.stop();
+}
 
-//const char* c_str() const;
+
+//const char& operator[](size_t pos) const;
+BENCHMARK_NO_TINYSTL(string_bracket_set_bench, "[] set")
+{
+	const char* s = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	Container a(s);
+	size_t asize = a.size();
+	b.start();
+	for(int i=0;i<100000;++i)
+	{
+		for(int j=0;j<asize;++j)
+			a[j] = s[(j+1)%asize];
+	}
+	b.use(a.c_str());
+	b.stop();
+}
+
 //size_t size() const;
+BENCHMARK(string_size_bench, "size")
+{
+	Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+	b.start();
+	for(int i=0;i<100000;++i)
+	{
+		b.use( a.size() );
+	}
+	b.stop();
+}
+
 //bool empty() const;
+BENCHMARK_NO_TINYSTL(string_empty_bench, "empty")
+{
+	Container a("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+	b.start();
+	for(int i=0;i<100000;++i)
+	{
+		b.use( a.empty() );
+	}
+	b.stop();
+}
 
 //void append(const char* first, const char* last);
+BENCHMARK(string_append_range_bench, "append range")
+{
+	const char* str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	Container a = str;
+	for(int i=0;i<100000;++i)
+	{
+		b.start();
+		a.append(str + 5, str + 10 );
+		b.stop();
+	}
+}
+
+
 //void append(const char* str);
+BENCHMARK_NO_TINYSTL(string_append_char_bench, "append char*")
+{
+	const char* str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+	Container a = str;
+	for(int i=0;i<100000;++i)
+	{
+		b.start();
+		a.append(str + 5);
+		b.stop();
+	}
+}
 
 //void swap(stringT<Alloc>& other);
+BENCHMARK_NO_TINYSTL(string_swap_bench, "swap")
+{
+	for(int i=0;i<100000;++i)
+	{
+		Container s0 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+		Container s1 = "Lorem ipsum ";
+		b.start();
+		s0.swap(s1);
+		b.stop();
+		b.use(s0.c_str());
+	}
+}
 
 //inline bool operator==(const stringT<Alloc>& lhs, const stringT<Alloc>& rhs)
 BENCHMARK(string_compare_string, "compare string")
@@ -234,6 +331,17 @@ void string_benchmarks()
 	string_resize_bench();
 	
 	string_reserve_bench();
+	
+	string_bracket_get_bench();
+	string_bracket_set_bench();
+	
+	string_size_bench();
+	string_empty_bench();
+	
+	string_append_range_bench();
+	string_append_char_bench();
+	string_swap_bench();
+	
 	string_set_value_constchar();
 	
 	string_set_value_string();

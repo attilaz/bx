@@ -7,8 +7,12 @@
 #define TINYSTL_CONFIG_H_HEADER_GUARD
 
 #ifndef TINYSTL_ASSERT
-#include <assert.h>
-#define TINYSTL_ASSERT(expr, msg)    assert(expr && msg)
+#ifdef DEBUG
+	#include <assert.h>
+	#define TINYSTL_ASSERT(expr, msg)    assert(expr && msg)
+#else
+	#define TINYSTL_ASSERT(expr, msg)    do {} while (0)
+#endif
 #endif
 
 // Define extra functions in config.h to extend functionality
