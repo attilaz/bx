@@ -86,7 +86,3 @@ void dbgPrintfData(const void* _data, uint32_t _size, const char* _format, ...)
 #undef HEX_DUMP_FORMAT
 }
 
-void Benchmark::use(...)
-{
-	
-}
