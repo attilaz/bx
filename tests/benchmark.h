@@ -8,6 +8,7 @@
 
 #include <stdint.h>
 #include <bx/timer.h>
+#include <functional>
 
 class Benchmark
 {
@@ -43,6 +44,8 @@ protected:
 	int64_t fullTime;
 	int64_t startTime;
 };
+
+float benchmark(std::function<void(Benchmark&)> func);
 
 
 #endif // BENCHMARK_H_HEADER_GUARD
