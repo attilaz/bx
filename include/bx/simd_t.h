@@ -52,7 +52,7 @@ namespace bx
 #define ELEMw 3
 #define BX_SIMD128_IMPLEMENT_SWIZZLE(_x, _y, _z, _w) \
 			template<typename Ty> \
-			Ty simd_u32_swiz_##_x##_y##_z##_w(Ty _a);
+			Ty simd128_u32_swiz_##_x##_y##_z##_w(Ty _a);
 #include "inline/simd128_swizzle.inl"
 
 #undef BX_SIMD128_IMPLEMENT_SWIZZLE
@@ -86,28 +86,28 @@ BX_SIMD128_IMPLEMENT_TEST(xyzw);
 #undef BX_SIMD128_IMPLEMENT_TEST
 
 	template<typename Ty>
-	Ty simd_u32_shuf_xyAB(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_xyAB(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_ABxy(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_ABxy(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_CDzw(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_CDzw(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_zwCD(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_zwCD(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_xAyB(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_xAyB(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_AxBy(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_AxBy(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_zCwD(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_zCwD(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_CzDw(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_CzDw(Ty _a, Ty _b);
 
 	template<typename Ty>
 	float simd_f32_x(Ty _a);
@@ -260,10 +260,10 @@ BX_SIMD128_IMPLEMENT_TEST(xyzw);
 	Ty simd_u32_sub(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_xAzC(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_xAzC(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_u32_shuf_yBwD(Ty _a, Ty _b);
+	Ty simd128_u32_shuf_yBwD(Ty _a, Ty _b);
 
 	template<typename Ty>
 	Ty simd_f32_rcp(Ty _a);
