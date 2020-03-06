@@ -52,7 +52,7 @@ namespace bx
 #define ELEMw 3
 #define BX_SIMD128_IMPLEMENT_SWIZZLE(_x, _y, _z, _w) \
 			template<typename Ty> \
-			Ty simd_swiz_##_x##_y##_z##_w(Ty _a);
+			Ty simd_u32_swiz_##_x##_y##_z##_w(Ty _a);
 #include "inline/simd128_swizzle.inl"
 
 #undef BX_SIMD128_IMPLEMENT_SWIZZLE
@@ -63,10 +63,10 @@ namespace bx
 
 #define BX_SIMD128_IMPLEMENT_TEST(_xyzw) \
 			template<typename Ty> \
-			BX_SIMD_FORCE_INLINE bool simd_test_any_##_xyzw(Ty _test); \
+			BX_SIMD_FORCE_INLINE bool simd_u32_test_any_##_xyzw(Ty _test); \
 			\
 			template<typename Ty> \
-			BX_SIMD_FORCE_INLINE bool simd_test_all_##_xyzw(Ty _test)
+			BX_SIMD_FORCE_INLINE bool simd_u32_test_all_##_xyzw(Ty _test)
 
 BX_SIMD128_IMPLEMENT_TEST(x   );
 BX_SIMD128_IMPLEMENT_TEST(y   );
@@ -86,256 +86,256 @@ BX_SIMD128_IMPLEMENT_TEST(xyzw);
 #undef BX_SIMD128_IMPLEMENT_TEST
 
 	template<typename Ty>
-	Ty simd_shuf_xyAB(Ty _a, Ty _b);
+	Ty simd_u32_shuf_xyAB(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_ABxy(Ty _a, Ty _b);
+	Ty simd_u32_shuf_ABxy(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_CDzw(Ty _a, Ty _b);
+	Ty simd_u32_shuf_CDzw(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_zwCD(Ty _a, Ty _b);
+	Ty simd_u32_shuf_zwCD(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_xAyB(Ty _a, Ty _b);
+	Ty simd_u32_shuf_xAyB(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_AxBy(Ty _a, Ty _b);
+	Ty simd_u32_shuf_AxBy(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_zCwD(Ty _a, Ty _b);
+	Ty simd_u32_shuf_zCwD(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_CzDw(Ty _a, Ty _b);
+	Ty simd_u32_shuf_CzDw(Ty _a, Ty _b);
 
 	template<typename Ty>
-	float simd_x(Ty _a);
+	float simd_f32_x(Ty _a);
 
 	template<typename Ty>
-	float simd_y(Ty _a);
+	float simd_f32_y(Ty _a);
 
 	template<typename Ty>
-	float simd_z(Ty _a);
+	float simd_f32_z(Ty _a);
 
 	template<typename Ty>
-	float simd_w(Ty _a);
+	float simd_f32_w(Ty _a);
 
 	template<typename Ty>
-	Ty simd_ld(const void* _ptr);
+	Ty simd128_u32_ld(const void* _ptr);
 
 	template<typename Ty>
-	void simd_st(void* _ptr, Ty _a);
+	void simd_u32_st(void* _ptr, Ty _a);
 
 	template<typename Ty>
-	void simd_stx(void* _ptr, Ty _a);
+	void simd_u32_stx(void* _ptr, Ty _a);
 
 	template<typename Ty>
-	void simd_stream(void* _ptr, Ty _a);
+	void simd_u32_stream(void* _ptr, Ty _a);
 
 	template<typename Ty>
-	Ty simd_ld(float _x, float _y, float _z, float _w);
+	Ty simd128_f32_ld(float _x, float _y, float _z, float _w);
 
 	template<typename Ty>
-	Ty simd_ld(float _x, float _y, float _z, float _w, float _a, float _b, float _c, float _d);
+	Ty simd256_f32_ld(float _x, float _y, float _z, float _w, float _a, float _b, float _c, float _d);
 
 	template<typename Ty>
-	Ty simd_ild(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w);
+	Ty simd128_u32_ld(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w);
 
 	template<typename Ty>
-	Ty simd_ild(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w, uint32_t _a, uint32_t _b, uint32_t _c, uint32_t _d);
+	Ty simd256_u32_ld(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w, uint32_t _a, uint32_t _b, uint32_t _c, uint32_t _d);
 
 	template<typename Ty>
-	Ty simd_splat(const void* _ptr);
+	Ty simd128_u32_splat(const void* _ptr);
 
 	template<typename Ty>
-	Ty simd_splat(float _a);
+	Ty simd128_f32_splat(float _a);
 
 	template<typename Ty>
-	Ty simd_isplat(uint32_t _a);
+	Ty simd128_u32_splat(uint32_t _a);
 
 	template<typename Ty>
-	Ty simd_zero();
+	Ty simd128_u32_zero();
 
 	template<typename Ty>
-	Ty simd_itof(Ty _a);
+	Ty simd_i32_to_f32(Ty _a);
 
 	template<typename Ty>
-	Ty simd_ftoi(Ty _a);
+	Ty simd_f32_to_i32(Ty _a);
 
 	template<typename Ty>
-	Ty simd_round(Ty _a);
+	Ty simd_f32_round(Ty _a);
 
 	template<typename Ty>
-	Ty simd_add(Ty _a, Ty _b);
+	Ty simd_f32_add(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_sub(Ty _a, Ty _b);
+	Ty simd_f32_sub(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_mul(Ty _a, Ty _b);
+	Ty simd_f32_mul(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_div(Ty _a, Ty _b);
+	Ty simd_f32_div(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_rcp_est(Ty _a);
+	Ty simd_f32_rcp_est(Ty _a);
 
 	template<typename Ty>
-	Ty simd_sqrt(Ty _a);
+	Ty simd_f32_sqrt(Ty _a);
 
 	template<typename Ty>
-	Ty simd_rsqrt_est(Ty _a);
+	Ty simd_f32_rsqrt_est(Ty _a);
 
 	template<typename Ty>
-	Ty simd_dot3(Ty _a, Ty _b);
+	Ty simd_f32_dot3(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_dot(Ty _a, Ty _b);
+	Ty simd_f32_dot(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_cmpeq(Ty _a, Ty _b);
+	Ty simd_f32_cmpeq(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_cmpneq(Ty _a, Ty _b);
+	Ty simd_f32_cmpneq(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_cmplt(Ty _a, Ty _b);
+	Ty simd_f32_cmplt(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_cmple(Ty _a, Ty _b);
+	Ty simd_f32_cmple(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_cmpgt(Ty _a, Ty _b);
+	Ty simd_f32_cmpgt(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_cmpge(Ty _a, Ty _b);
+	Ty simd_f32_cmpge(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_min(Ty _a, Ty _b);
+	Ty simd_f32_min(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_max(Ty _a, Ty _b);
+	Ty simd_f32_max(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_and(Ty _a, Ty _b);
+	Ty simd_u32_and(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_andc(Ty _a, Ty _b);
+	Ty simd_u32_andc(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_or(Ty _a, Ty _b);
+	Ty simd_u32_or(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_xor(Ty _a, Ty _b);
+	Ty simd_u32_xor(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_sll(Ty _a, int _count);
+	Ty simd_u32_sl(Ty _a, int _count);
 
 	template<typename Ty>
-	Ty simd_srl(Ty _a, int _count);
+	Ty simd_u32_sr(Ty _a, int _count);
 
 	template<typename Ty>
-	Ty simd_sra(Ty _a, int _count);
+	Ty simd_i32_sr(Ty _a, int _count);
 
 	template<typename Ty>
-	Ty simd_icmpeq(Ty _a, Ty _b);
+	Ty simd_u32_cmpeq(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_icmplt(Ty _a, Ty _b);
+	Ty simd_u32_cmplt(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_icmpgt(Ty _a, Ty _b);
+	Ty simd_u32_cmpgt(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_imin(Ty _a, Ty _b);
+	Ty simd_u32_min(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_imax(Ty _a, Ty _b);
+	Ty simd_u32_max(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_iadd(Ty _a, Ty _b);
+	Ty simd_u32_add(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_isub(Ty _a, Ty _b);
+	Ty simd_u32_sub(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_xAzC(Ty _a, Ty _b);
+	Ty simd_u32_shuf_xAzC(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_shuf_yBwD(Ty _a, Ty _b);
+	Ty simd_u32_shuf_yBwD(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_rcp(Ty _a);
+	Ty simd_f32_rcp(Ty _a);
 
 	template<typename Ty>
-	Ty simd_orx(Ty _a);
+	Ty simd_u32_orx(Ty _a);
 
 	template<typename Ty>
-	Ty simd_orc(Ty _a, Ty _b);
+	Ty simd_u32_orc(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_neg(Ty _a);
+	Ty simd_f32_neg(Ty _a);
 
 	template<typename Ty>
-	Ty simd_madd(Ty _a, Ty _b, Ty _c);
+	Ty simd_f32_madd(Ty _a, Ty _b, Ty _c);
 
 	template<typename Ty>
-	Ty simd_nmsub(Ty _a, Ty _b, Ty _c);
+	Ty simd_f32_nmsub(Ty _a, Ty _b, Ty _c);
 
 	template<typename Ty>
-	Ty simd_div_nr(Ty _a, Ty _b);
+	Ty simd_f32_div_nr(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_selb(Ty _mask, Ty _a, Ty _b);
+	Ty simd_u32_selb(Ty _mask, Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_sels(Ty _test, Ty _a, Ty _b);
+	Ty simd_u32_sels(Ty _test, Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_not(Ty _a);
+	Ty simd_u32_not(Ty _a);
 
 	template<typename Ty>
-	Ty simd_abs(Ty _a);
+	Ty simd_f32_abs(Ty _a);
 
 	template<typename Ty>
-	Ty simd_clamp(Ty _a, Ty _min, Ty _max);
+	Ty simd_f32_clamp(Ty _a, Ty _min, Ty _max);
 
 	template<typename Ty>
-	Ty simd_lerp(Ty _a, Ty _b, Ty _s);
+	Ty simd_f32_lerp(Ty _a, Ty _b, Ty _s);
 
 	template<typename Ty>
-	Ty simd_rsqrt(Ty _a);
+	Ty simd_f32_rsqrt(Ty _a);
 
 	template<typename Ty>
-	Ty simd_rsqrt_nr(Ty _a);
+	Ty simd_f32_rsqrt_nr(Ty _a);
 
 	template<typename Ty>
-	Ty simd_rsqrt_carmack(Ty _a);
+	Ty simd_f32_rsqrt_carmack(Ty _a);
 
 	template<typename Ty>
-	Ty simd_sqrt_nr(Ty _a);
+	Ty simd_f32_sqrt_nr(Ty _a);
 
 	template<typename Ty>
-	Ty simd_log2(Ty _a);
+	Ty simd_f32_log2(Ty _a);
 
 	template<typename Ty>
-	Ty simd_exp2(Ty _a);
+	Ty simd_f32_exp2(Ty _a);
 
 	template<typename Ty>
-	Ty simd_pow(Ty _a, Ty _b);
+	Ty simd_f32_pow(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_cross3(Ty _a, Ty _b);
+	Ty simd_f32_cross3(Ty _a, Ty _b);
 
 	template<typename Ty>
-	Ty simd_normalize3(Ty _a);
+	Ty simd_f32_normalize3(Ty _a);
 
 	template<typename Ty>
-	Ty simd_ceil(Ty _a);
+	Ty simd_f32_ceil(Ty _a);
 
 	template<typename Ty>
-	Ty simd_floor(Ty _a);
+	Ty simd_f32_floor(Ty _a);
 
 	template<typename Ty>
 	Ty simd_shuf_xAzC_ni(Ty _a, Ty _b);
@@ -541,19 +541,19 @@ namespace bx
 	typedef simd256_ref_t simd256_t;
 #endif // !BX_SIMD_AVX
 
-	simd128_t simd_zero();
+	simd128_t simd128_u32_zero();
 
-	simd128_t simd_ld(const void* _ptr);
+	simd128_t simd128_u32_ld(const void* _ptr);
 
-	simd128_t simd_ld(float _x, float _y, float _z, float _w);
+	simd128_t simd128_u32_ld(float _x, float _y, float _z, float _w);
 
-	simd128_t simd_ild(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w);
+	simd128_t simd128_u32_ld(uint32_t _x, uint32_t _y, uint32_t _z, uint32_t _w);
 
-	simd128_t simd_splat(const void* _ptr);
+	simd128_t simd128_u32_splat(const void* _ptr);
 
-	simd128_t simd_splat(float _a);
+	simd128_t simd128_f32_splat(float _a);
 
-	simd128_t simd_isplat(uint32_t _a);
+	simd128_t simd128_u32_splat(uint32_t _a);
 
 } // namespace bx
 

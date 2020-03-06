@@ -217,7 +217,7 @@ namespace bx
 	BX_CONSTEXPR_FUNC uint64_t simd_u64_sr(uint64_t _a, int32_t _sa);
 
 	///
-	BX_CONSTEXPR_FUNC int64_t simd_u64_sr(int64_t _a, int32_t _sa);
+	BX_CONSTEXPR_FUNC int64_t simd_i64_sr(int64_t _a, int32_t _sa);
 
 	///
 	BX_CONSTEXPR_FUNC uint64_t simd_u64_rol(uint64_t _a, int32_t _sa);
